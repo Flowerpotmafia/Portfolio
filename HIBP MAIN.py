@@ -1,24 +1,38 @@
 
+import os
 import time
 import pyhibp
-from pyhibp import pwnedpasswords as pw
+from datetime import datetime
+from dotenv import load_dotenv
 
 
-def main():
+#this opens the .env file that holds the environmental variables for security
+load_dotenv('TestVariables.env')
 
+def main(): 
+
+    #gets the date and time right now to pass along to the output file name
+    now = datetime.now() 
+    formatted_now = now.strftime("%m-%d-%Y_%Hh-%Mm")
+
+    file_name = f"Results_{formatted_now}.txt"
+
+    YOUR_API_KEY = os.getenv('API_KEY')
+
+    #File opening
     infile = open("Test_Email.txt", "r")
-    outfile = open("Output.txt", "w")
-    YOUR_API_KEY = "*Insert API Key Here"
+    outfile = open(file_name, "w")    
     
     
-
-    def rate_limit():
-        # Make a function to avoid hitting the HIBP API rate limit
+    
+    def rate_limit():        
         time.sleep(15)
+        # Make a function to avoid hitting the HIBP API rate limit
 
-    #Key is authenticated to the HIBP API to verify subscription
+    
     if YOUR_API_KEY is not None:
         pyhibp.set_api_key(key=YOUR_API_KEY)
+        #Key is authenticated to the HIBP API to verify subscription
 
     
 
@@ -30,8 +44,7 @@ def main():
         y = 0
 
         if YOUR_API_KEY is not None:
-            # API Key Required. Get breaches that affect a given account, truncate the response to the breach names
-            #   and include unverified breaches
+            # Checking if there is a valid API Key and if there is, it will run this part of the script 
             
             resp = pyhibp.get_account_breaches(account=line.strip(), include_unverified=True)
 
@@ -60,9 +73,12 @@ def main():
             else:
                 print(line.strip() + "|CLEAN|")  
 
-        rate_limit()   
-
+        #Calls rate limit so it doesn't go too quickly for the API
+        rate_limit() 
+        
+    #File closing
     outfile.close()
-    infile.close()    
+    infile.close()
 
+#Calls main to begin the script
 main()
