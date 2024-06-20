@@ -2,4 +2,4 @@
 
 Hello, my name is Matthew and welcome to my first github repository. 
 
-Here is some of my work i've completed in my personal time over the last two years.
+If something looks weird it's probably because it is. I don't know how to use Github but im always learning :)
